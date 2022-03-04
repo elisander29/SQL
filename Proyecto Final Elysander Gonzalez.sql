@@ -392,11 +392,16 @@ insert into  `torneo_equipo` (`ID_torneo`,`ID_equipo`) values ('1','1');
 
 ## CREACION DE VISTAS -----------------------------------------------------------------------
 
+
+##muestra las estadísticas (Puntos, Rebotes, Bloqueos, Rodos, Asistencia, Minutos Jugados) 
+## de cada Jugador en cada Partido 
+
 CREATE VIEW `Estadisticas_Jugadores` AS
 select j.Nombre,j.Apellido,e.puntos,e.rebotes,e.bloqueos,e.robos,e.asistencia,e.min_jugados,e.ID_partido
 from estadistica_jugador as e
 inner join jugadores as j on e.ID_jugador=j.ID_jugadores;
 
+## esta vista muestra a que equipo pertenece cada jugador
 CREATE VIEW `Equipo_de_Jugador` AS
 Select e.nombre as Nombre_equipo,j.nombre,j.apellido,t.ID_equipo,t.Id_jugador from equipo_jugador as t
 inner join equipos as e on t.ID_equipo=e.ID_Equipos
@@ -404,10 +409,13 @@ inner join jugadores as j on t.Id_jugador=j.ID_JUGADORES
 group by t.Id_jugador;
 
 
+## muestra el nombre del equipo el año en el que fue fundado y país en el que se encuentra
 
 CREATE VIEW `informacion_equipos` AS
 select e.nombre,e.año,p.nombre as pais from equipos as e
 inner join pais as p on p.ID_pais=e.ID_pais;
+
+#Muestra el Nombre de la Sede la dirección la capacidad máxima y en qué país y ciudad se encuentran
 
 CREATE VIEW `informacion_Sedes` AS
 select s.nombre,s.direccion,s.capacidad_max,p.nombre as pais,c.nombre as ciudad from sede as s
@@ -416,7 +424,8 @@ inner join ciudad as c on s.ID_ciudad=c.ID_ciudad
 group by s.nombre;
 
 
-
+## Muestra la información más relevante de cada torneo como los Juegos Jugados, Juegos perdidos y ganados
+## los Puntos a favor y en contra y el número de Edición de cada torneo
 CREATE VIEW `Resultados_Torneo` AS
 select et.j_ganados,et.j_perdidos,et.J_jugados,et.p_favor,et.p_contra,t.nombre,t.edicion_torneo,et.id_torneo
 from estadistica_torneo as et
@@ -426,6 +435,7 @@ group by t.nombre;
 
 ## Creacion de Funciones ------------------------------------------------------------------
 
+## calculan el promedio de puntos y rebotes del jugador que se le pase el parámetro (ID_jugador). 
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` FUNCTION `Promedio_puntos`(`IDjugador` int) RETURNS float
     DETERMINISTIC
